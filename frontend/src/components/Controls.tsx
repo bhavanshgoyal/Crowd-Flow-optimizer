@@ -1,13 +1,18 @@
 import { useState } from 'react'
-import { useStore } from '../store'
+import { useStore, type Venue } from '../store'
 
 async function post(action: string, extra: Record<string, unknown> = {}) {
   try {
-    await fetch('/api/control', {
+    const res = await fetch('/api/control', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action, ...extra }),
     })
+    const data = await res.json()
+    // A reset swaps in a whole new venue (different geometry/size) — sync
+    // the store immediately instead of waiting on a venue the tick stream
+    // never sends (ticks only carry agents/density/zones, see store.ts).
+    if (data.venue) useStore.getState().setVenue(data.venue as Venue)
   } catch {
     // Backend not reachable yet — the button still reflects intent locally.
   }

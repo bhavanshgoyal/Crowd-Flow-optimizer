@@ -1,0 +1,29 @@
+{
+  "id": "ghat",
+  "name": "Sangam Ghat — Mauni Amavasya",
+  "width_m": 100,
+  "height_m": 70,
+  "cell_m": 0.5,
+  "obstacles": [
+    {"x0": 0, "y0": 0, "x1": 100, "y1": 2},
+    {"x0": 0, "y0": 68, "x1": 100, "y1": 70},
+    {"x0": 50, "y0": 2, "x1": 54, "y1": 9},
+    {"x0": 50, "y0": 19, "x1": 54, "y1": 51},
+    {"x0": 50, "y0": 61, "x1": 54, "y1": 68}
+  ],
+  "spawns": [
+    {"id": "stand_a", "x": 8, "y": 18, "radius": 9, "rate_per_s": 11, "goal": "river_access"},
+    {"id": "stand_b", "x": 8, "y": 52, "radius": 9, "rate_per_s": 6, "goal": "river_access"}
+  ],
+  "goals": [
+    {"id": "river_access", "x": 98, "y": 35, "width_m": 10}
+  ],
+  "zones": [
+    {"id": "gate_3", "label": "Gate 3", "x0": 42, "y0": 5, "x1": 54, "y1": 21},
+    {"id": "gate_5", "label": "Gate 5", "x0": 42, "y0": 49, "x1": 54, "y1": 65},
+    {"id": "concourse", "label": "Concourse", "x0": 8, "y0": 2, "x1": 42, "y1": 68}
+  ],
+  "corridors": [
+    {"id": "gate_5_corridor", "x0": 50, "y0": 49, "x1": 62, "y1": 61, "base_multiplier": 1.9}
+  ]
+}
