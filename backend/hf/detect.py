@@ -51,17 +51,21 @@ def _get_pipe():
     return _pipe
 
 
-def _remote_count(image_bytes: bytes, img: Image.Image, threshold: float) -> dict | None:
+def _remote_count(img: Image.Image, threshold: float) -> dict | None:
     token = os.environ.get("HF_TOKEN")
     if not token:
         return None
     try:
         from huggingface_hub import InferenceClient
 
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=90)
+        jpeg_bytes = buf.getvalue()
+
         client = InferenceClient(provider="hf-inference", api_key=token)
         for model_id in (MODEL_ID, INFERENCE_FALLBACK_MODEL):
             try:
-                results = client.object_detection(image_bytes, model=model_id, threshold=threshold)
+                results = client.object_detection(jpeg_bytes, model=model_id, threshold=threshold)
             except Exception:
                 continue
             people = [r for r in results if str(r.label).lower() == "person"]
@@ -117,7 +121,7 @@ def count_people(image_bytes: bytes, threshold: float = 0.5) -> dict:
         except Exception:
             pass
 
-    remote = _remote_count(image_bytes, img, threshold)
+    remote = _remote_count(img, threshold)
     if remote is not None:
         return remote
 

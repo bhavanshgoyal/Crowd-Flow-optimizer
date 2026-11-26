@@ -10,10 +10,13 @@ crosses the network be on the critical path of the live control room.
 """
 
 import os
+import time
 
 MODEL = "Qwen/Qwen2.5-7B-Instruct"
+CACHE_TTL_S = 30.0
 _client = None
 _client_failed = False
+_cache: dict[tuple[str, str], tuple[float, str]] = {}
 
 SYSTEM = (
     "You are a crowd safety control room assistant. You receive density readings in "
@@ -44,6 +47,12 @@ def advise(breach: dict, zones: list[dict], fallback_action: str) -> str:
     if client is None:
         return fallback_action
 
+    key = (str(breach.get("zone", "")), str(breach.get("severity", "")))
+    now = time.monotonic()
+    cached = _cache.get(key)
+    if cached and (now - cached[0]) < CACHE_TTL_S:
+        return cached[1]
+
     context = ", ".join(f"{z['label']} {z['rho']} p/m2 (LOS {z['los']})" for z in zones)
     prompt = (f"Predicted breach: {breach['label']} reaching "
               f"{breach['predicted_rho']} p/m2 in {breach['eta_s']} seconds. "
@@ -55,7 +64,8 @@ def advise(breach: dict, zones: list[dict], fallback_action: str) -> str:
                       {"role": "user", "content": prompt}],
             max_tokens=60, temperature=0.3,
         )
-        text = r.choices[0].message.content.strip()
-        return text or fallback_action
+        text = (r.choices[0].message.content or "").strip() or fallback_action
     except Exception:
-        return fallback_action     # never let the demo depend on a network call
+        text = fallback_action     # never let the demo depend on a network call
+    _cache[key] = (now, text)
+    return text
