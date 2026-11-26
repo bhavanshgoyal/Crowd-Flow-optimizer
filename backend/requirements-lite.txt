@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+numpy
+scipy
+pydantic
+python-multipart
+pillow
+huggingface_hub

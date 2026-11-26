@@ -1,0 +1,19 @@
+# Python / backend
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+backend/static/
+
+# Node / frontend
+node_modules/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# Secrets & local logs (push_log.txt contains credentials)
+.env
+push_log.txt
+
+# Raw unoptimized source media (~129 MB; frontend uses public/images/*.webp)
+frontend/images and genrated vedios/

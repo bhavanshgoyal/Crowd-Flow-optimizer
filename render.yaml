@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: crowd-flow-optimiser
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: HF_TOKEN
+        sync: false
