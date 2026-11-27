@@ -1,3 +1,4 @@
+**Live Demo:** https://crowd-flow-optimiser.onrender.com *(Hosted on Render Free Tier — allow ~40s to wake on first visit)*
 ---
 title: Crowd Flow Optimiser
 emoji: 🚦
